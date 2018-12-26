@@ -1,0 +1,370 @@
+.bootstrap-tagsinput {
+    width: 100%;
+}
+.bootstrap-tagsinput .tag {
+    color: white;
+    margin-right: 2px;
+}
+.label-info {
+    background-color: #5bc0de;
+}
+.label {
+    border-radius: 0.25em;
+    color: #fff;
+    display: inline;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0.2em 0.6em 0.3em;
+    text-align: center;
+    vertical-align: baseline;
+    white-space: nowrap;
+}
+.bootstrap-tagsinput input {
+  background-color: transparent;
+  border: medium none;
+  box-shadow: none;
+  margin: 0;
+  max-width: inherit;
+  outline: medium none;
+  padding: 0 6px;
+  width: auto;
+}
+
+/*******ON/OFF**********/
+.onoffswitch {
+    position: relative; width: 70px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch .onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #999999; border-radius: 20px;
+}
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 24px; padding: 0; line-height: 24px;
+    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+    content: "ON";
+    padding-left: 10px;
+    background-color: #34A7C1; color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+    content: "OFF";
+    padding-right: 10px;
+    background-color: #EEEEEE; color: #999999;
+    text-align: right;
+}
+.onoffswitch-switch {
+    display: block; width: 18px; margin: 6px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 38px;
+    border: 2px solid #999999; border-radius: 20px;
+    transition: all 0.3s ease-in 0s; 
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px; 
+}
+.form-group.item_video {
+    position: relative;
+}
+.remove_video {
+    position: absolute;
+    right: -8px;
+    background-color: #2cabe2;
+    border-radius: 10px;
+    color: #fff;
+    width: 20px;
+    padding-bottom: 1px;
+    top: 6px;
+    text-align: center;
+}
+.plus_group input[type="radio"] {
+    display: none;
+}
+.plus_group input[type="radio"] + label {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #999;
+    cursor: pointer;
+    line-height: 44px;
+    margin: 0;
+    text-align: center;
+    width: 100%;
+}
+.plus_group input[type="radio"]:checked + label {
+    background-color: #f0f0f0;
+}
+.plus_group select {
+    width: 100%;
+}
+
+
+
+
+
+
+/**********************/
+.dropdown-wrap.response .tg-doctor-profile1 {
+    border: 0px solid #c2c2c2;
+    padding: 0;
+}
+.dropdown-wrap.response .tg-doctor-profile1 + .tg-doctor-profile1 {
+    border: 0px solid #c2c2c2;
+    padding: 10px 0 0;
+    border-top: 1px solid #d6d6d6;
+
+}
+.response .tg-doctor-profile1 a img {
+    border: 4px solid #cbcbcb;
+    border-radius: 50%;
+}
+.dropdown-wrap.response .tg-doctor-profile1 .tg-specialities {
+    border: 0px solid ;
+    margin-bottom: 0;
+}
+.response .tg-doctor-profile1 {
+    background-color: #ffffff;
+    border: 1px solid #c2c2c2;
+    border-radius: 3px;
+    margin-top: 10px;
+    padding: 15px;
+    position: relative;
+}
+.response .tg-doctor-profile1 .tg-heading-border:after {
+    display: none;
+}
+.response .tg-doctor-profile1 .tg-heading-border {
+    margin: 0;
+    padding: 0;
+}
+.response .tg-doctor-profile1 .tg-heading-border h4, .response .tg-doctor-profile1 h5 {
+    margin: 0px;
+    text-transform: none;
+}
+.response .feature-rating.user-star-rating {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    box-shadow: none;
+    padding: 0;
+    text-align: left;
+}
+.aff_group .button_gr {
+    background-color: #e84644;
+    border-radius:50%;
+    border: none;
+}
+.aff_group .button_gr a {
+    color: #fff;
+    display: block;
+    line-height: 18px;
+    padding-bottom: 2px;
+    width: 20px;
+    text-align: center;
+}
+.button_gr {
+    position: absolute;
+    border: 1px solid #bbbbbb;
+    border-radius: 3px;
+    line-height: 12px;
+    padding: 2px;
+    right: 15px;
+    top: 5px;
+    font-size: 18px;
+    z-index: 999;
+}
+.button_gr .dropdown-menu {
+    border: 1px solid #707070;
+    border-radius: 0;
+    left: auto;
+    right: -3px;
+    padding: 0;
+}
+.button_gr .dropdown-menu li {
+    list-style: none;
+    background-color: #8ec63f;
+    margin: 0;
+}
+.button_gr .dropdown-menu li a {
+    padding: 5px 20px;
+}
+.approve_btn.btn {
+    background-color: #52b606;
+    color: #fff;
+    text-transform: uppercase;
+    margin-top: 10px;
+}
+.decline_btn.btn {
+    background-color: #696363;
+    color: #fff;
+    text-transform: uppercase;
+    margin-top: 10px;
+}
+.list_user .tg-doctor-profile1 {
+    margin-bottom: 10px;
+    border-top: medium none !important;
+    padding-top: 10px;
+}
+.list_user .tg-doctor-profile1:nth-child(2n+1) {
+    clear: both;
+}
+.list_user .tg-specialities {
+    border: none;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+.list_user .feature-rating.user-star-rating {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    box-shadow: none;
+    padding: 0;
+    text-align: left;
+}
+.list_user .tg-doctor-profile1  h4 {
+    margin: 0 0 5px;
+}
+.list_user .tg-doctor-profile1  h4, .list_user .tg-doctor-profile1 h5 {
+    margin: 0px;
+    text-transform: none;
+}
+.list_user .tg-doctor-profile1 a img {
+    border-radius: 50%;
+    height: auto;
+    max-width: 100%;
+}
+.list_user .tg-tagline {
+    margin-bottom: 0;
+}
+.aff_group .aff_btn.change_group_btn {
+    color: #9f9f9f;
+    display: block;
+    font-size: 13px;
+    padding-top: 15px;
+    position: relative;
+}
+.aff_group ul.edit_category {
+    border: 1px solid #9f9f9f;
+    padding: 0 10px;
+}
+.aff_group ul.edit_category li {
+    list-style: outside none none;
+    position: relative;
+    padding-right: 30px;
+}
+.aff_group ul.edit_category li:after {
+    border: 3px solid #fff;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px #aaa;
+    content: "";
+    height: 18px;
+    position: absolute;
+    right: 0;
+    top: 8px;
+    width: 18px;
+}
+.aff_group ul.edit_category li:hover:after {
+    background-color: #e2e2e2;
+}
+.aff_group ul.edit_category li.active:after {
+    background-color: #27a8e1;
+}
+.aff_group ul.edit_category li + li {
+    border-top: 1px solid #9f9f9f;
+}
+.aff_group ul.edit_category li a {
+    background-color: transparent;
+    line-height: 36px;
+    padding: 0;
+    color: #9f9f9f;
+}
+a.hasmodal, a.list-avatar {
+    position: relative;
+    display: block;
+}
+span.member_tag {
+    background-color: #fff;
+    background: -webkit-linear-gradient(#fff 15%, #9f9f9f); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#fff 15%, #9f9f9f); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#fff 15%, #9f9f9f); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#fff 15%, #9f9f9f); /* Standard syntax */
+    border-radius: 20px;
+    bottom: -10px;
+    box-shadow: 0 0.5px 2px 0 #999999;
+    color: #909090;
+    font-size: 11px;
+    left: 50%;
+    line-height: 26px;
+    margin-left: -32px;
+    min-width: 65px;
+    padding: 0 10px;
+    position: absolute;
+    text-align: center;
+    text-shadow: 1px 1px #ffffff;
+    width: 66px;
+}
+span.invite_tag {
+    background: -webkit-linear-gradient(#59b218 15%, #408011); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#59b218 15%, #408011); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#59b218 15%, #408011); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#59b218 15%, #408011); /* Standard syntax */
+    color: #fff;
+    text-shadow: 0 0 #ffffff;
+}
+span.member {
+    background: -webkit-linear-gradient(#27a8e0 15%, #1b8aba); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#27a8e0 15%, #1b8aba); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#27a8e0 15%, #1b8aba); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#27a8e0 15%, #1b8aba); /* Standard syntax */
+    box-shadow: 0 0.5px 2px 0 #27a8e0;
+    color: #fff;
+    text-shadow: 0 0 #ffffff;
+}
+span.listing_only {
+    margin-left: -41px;
+    width: 82px;
+}
+
+.tg-docimg {
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    float: left;
+    margin: 0 15px 0 0;
+    width: 150px;
+    position: relative;
+}
+.tg-docimg .tg-uploadimg {
+    border-bottom-color: #27aae1;
+    width: 0;
+    height: 0;
+    z-index: 3;
+    border-bottom: 40px solid;
+    border-left: 40px solid transparent;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.tg-docimg .tg-uploadimg i {
+    position: absolute;
+    right: 5px;
+    top: 18px;
+    color: #fff;
+    line-height: 17px;
+}
+.fw-option-type-custom-checkboxes label img {
+    width: 18px;
+    height: auto;
+    margin-right: 7px;
+    vertical-align: bottom;
+}
+

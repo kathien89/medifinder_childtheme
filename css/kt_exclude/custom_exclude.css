@@ -1,0 +1,82 @@
+/*****************/
+.quickbooking {
+    float: left;
+    margin-top: 10px;
+    width: 100%;
+}
+.quickbooking .jspVerticalBar {
+    right: 2px;
+    width: 10px;
+    visibility: hidden;
+}
+.quickbooking .wrap_item:hover  .jspVerticalBar {
+    visibility: visible;
+}
+.quickbooking .wrap_item.not_full {
+}
+.quickbooking .wrap_item {
+    width: calc(100% + 18px)!important;
+    max-height: 152px;
+    overflow: auto;
+    clear: both;
+}
+.force-scroll {
+    min-height: 156px;
+}
+.quickbooking .item {
+    float: left;
+    width: 50%;
+}
+.quickbooking .item .tg-doctimeslot {
+    margin-bottom: 0;
+    padding: 2px;
+    width: 100%;
+}
+.quickbooking .item .tg-doctimeslot .tg-box {
+    border: medium none;
+    height: auto;
+    padding: 0;
+    width: 100%;
+}
+.quickbooking .item .tg-doctimeslot .tg-box .tg-radio {
+    background-color: rgba(0, 0, 0, 0);
+    border: medium none;
+    padding: 0;
+    width: 100%;
+}
+.quickbooking .item .tg-doctimeslot .tg-box .tg-radio label {
+    background-color: #e0e0e0;
+    border: medium none;
+    border-radius: 3px;
+    color: #969696;
+    font-size: 11px;
+    line-height: 14px;
+    padding: 10px 0;
+    text-align: center;
+}
+.quickbooking .item .tg-doctimeslot.title .tg-box .tg-radio label {
+    background-color: #27aae1;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.quickbooking .quick_button.expand_full {
+    background-color: #5d5d5b;
+    font-size: 18px;
+}
+.quickbooking .quick_button {
+    background-color: #27aae1;
+    border: none;
+    border-radius: 3px;
+    clear: both;
+    color: #ffffff;
+    float: left;
+    font-size: 12px;
+    font-weight: 700;
+    margin: 2px 0 2px 2px;
+    padding: 7px 0;
+    text-align: center;
+    text-transform: uppercase;
+    width: calc(100% - 4px);
+}

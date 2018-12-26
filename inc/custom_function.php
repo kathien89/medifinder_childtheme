@@ -107,6 +107,21 @@ if (!function_exists('kt_docdirect_personal_options_save')) {
 				update_user_meta( $user_identity, $key, esc_attr( $value ) );
 			}
 		}
+		if( !empty( $_POST['basics']['latitude'] ) && !empty( $_POST['basics']['longitude'] ) && !empty( $_POST['basics']['address'] ) ){
+			$tit = explode(',', $_POST['basics']['address']);
+			$pratice_title	  = str_replace(' ', '_', strtolower(sanitize_text_field( $tit[0] )));
+			$basics	  = $_POST['basics'];
+			$current_practices[$pratice_title] = array(
+									'title' => sanitize_text_field( $tit[0] ),
+									'active_location' => true,
+									'basics' => $basics, 
+									'schedules' => '', 
+									'socials' => ''
+								);
+			update_user_meta($user_identity, 'latitude', $basics['latitude']);
+			update_user_meta($user_identity, 'longitude', $basics['longitude']);
+			update_user_meta($user_identity, 'user_practices', $current_practices);
+		}
 		
 		if( isset( $_POST['privacy'] ) && !empty( $_POST['privacy'] ) ){
 			update_user_meta( $user_identity, 'privacy', $_POST['privacy'] );

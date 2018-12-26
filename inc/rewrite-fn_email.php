@@ -1256,7 +1256,56 @@ function kt_process_email_verification($params = '') {
 			$body .= '</div>';
 			$body 			.= $email_helper->prepare_email_footers();
 			wp_mail($email, $subject, $ave_content);
-		}
+	return true;
+}
+
+function kt_senmail_temporary_prorile($params = '') {
+			global $current_user;
+			extract($params);
+			$email_helper	= new DocDirectProcessEmail();
+
+			$name = docdirect_get_username($user_identity);
+
+			$subject_default = esc_html__('Account Verification', 'docdirect');
+			$email_content_default = 'Hi %name%!<br/>
+										Sincerely,<br/>
+										%logo%
+								';
+
+			if (function_exists('fw_get_db_post_option')) {
+				$subject = fw_get_db_settings_option('tm_subject');
+				$tm_content = fw_get_db_settings_option('tm_content');
+			}
+
+			//set defalt contents
+			if (empty($tm_content)) {
+				$tm_content = $email_content_default;
+			}
+
+			//set defalt subject
+			if (empty($subject)) {
+				$subject = $subject_default;
+			}
+
+			$logo		   = kt_process_get_logo();
+
+			$tm_content = str_replace("%name%", $name, $tm_content); //Replace Name
+			$tm_content = str_replace("%email%", $email, $tm_content); //Replace Name
+			$tm_content = str_replace("%link%", $link, $tm_content); //Replace Link
+			$tm_content = str_replace("%logo%", nl2br($logo), $tm_content); //Replace logo
+
+			$body = '';
+			// $body .= $email_helper->prepare_email_headers();
+
+			$body .= '<div style="width: 100%; float: left; padding: 0 0 60px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;">';
+			$body .= '<div style="width: 100%; float: left;">';
+			$body .= '<p>' . $tm_content . '</p>';
+			$body .= '</div>';
+			$body .= '</div>';
+			// $body 			.= $email_helper->prepare_email_footers();
+			wp_mail($email, $subject, $tm_content);
+	return true;
+}
 
 
 

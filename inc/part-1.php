@@ -63,6 +63,12 @@ function kt_docdirect_get_avatar(){
 					'docdirect_get_user_avatar_filter',
 					 docdirect_get_user_avatar(array('width'=>270,'height'=>270), $user_identity) //size width,height
 				);
+    if(kt_is_company($user_identity)){
+      $company_logo_id = get_user_meta($user_identity, 'userprofile_company_logo', true);
+      if ( isset( $company_logo_id ) && !empty( $company_logo_id ) ) {
+        $avatar = docdirect_get_image_source($company_logo_id,full,full);
+      }
+    }
 	
 	$featured_date	= get_user_meta($user_identity, 'user_featured', true);
 	
@@ -498,6 +504,12 @@ function kt_direct_sidebar_mobile() {
                         'docdirect_get_user_avatar_filter',
                          docdirect_get_user_avatar(array('width'=>150,'height'=>150), $user_identity) //size width,height
                     );
+                        if(kt_is_company($user_identity)){
+                          $company_logo_id = get_user_meta($user_identity, 'userprofile_company_logo', true);
+                          if ( isset( $company_logo_id ) && !empty( $company_logo_id ) ) {
+                            $avatar = docdirect_get_image_source($company_logo_id,full,full);
+                          }
+                        }
                     
                     $first_name            = get_user_meta( $user_identity, 'first_name', true);
                     $last_name              = get_user_meta( $user_identity, 'last_name', true);
@@ -1491,7 +1503,7 @@ function kt_add_practice() {
 		$active_location = true;
 	}
 
-	if ($_POST['pratice_title'] == '') {		
+	if ($_POST['pratice_title'] == '') {
 		$json['type']		   = 'error';
 		$json['message']		= pll__('Name is require.','docdirect');
 		echo json_encode($json);
@@ -3357,7 +3369,7 @@ add_action('docdirect_verify_user_account', 'kt_action');
 function kt_action() {
 	global $wpdb;
         
-	if(!is_user_logged_in()) {
+	if(!is_user_logged_in() && is_front_page()) {
         if ( !empty($_GET['key']) && !empty($_GET['verifyemail']) ) {
             $verify_key 	= esc_attr( $_GET['key'] );
             $user_email 	= esc_attr( $_GET['verifyemail'] );
@@ -3382,18 +3394,18 @@ function kt_action() {
 					// $secure_cookie = is_ssl() ? true : false;
 					// wp_set_auth_cookie( $user_identity, true, $secure_cookie );
 					update_user_meta($user_identity, 'verify_user', 'on');
+					?>
+					<script type="text/javascript">
+						jQuery(document).on('ready', function () { 
+							jQuery.sticky(scripts_vars.account_verification, {classList: 'success', speed: 200, autoclose: 20000, position: 'top-right', }); 
+
+								$('.tg-user-modal').modal('show');
+								// setTimeout(function(){window.location = '<?php echo $return_url;?>';} , 5000);
+					});
+					</script>
+					<?php
 				}
 			}
-			?>
-			<script type="text/javascript">
-				jQuery(document).on('ready', function () { 
-					jQuery.sticky(scripts_vars.account_verification, {classList: 'success', speed: 200, autoclose: 20000, position: 'top-right', }); 
-
-						$('.tg-user-modal').modal('show');
-						// setTimeout(function(){window.location = '<?php echo $return_url;?>';} , 5000);
-			});
-			</script>
-			<?php
 					// $script = "jQuery(document).on('ready', function () { jQuery.sticky(scripts_vars.account_verification, {classList: 'success', speed: 200, autoclose: 20000, position: 'top-right', }); });";
             		// wp_add_inline_script('docdirect_functions', $script, 'after');
         }

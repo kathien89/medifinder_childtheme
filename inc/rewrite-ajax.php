@@ -2183,11 +2183,17 @@ if ( ! function_exists( 'kt_docdirect_ajax_login' ) ) {
 		$user_array = array();
 		$user_array['user_login'] 		= esc_sql($_POST['username']);
 		$user_array['user_password'] 	= esc_sql($_POST['password']);
-		
+		$user_array['login_redirect'] 	= esc_sql($_POST['login_redirect']);
+
+		$login_redirect = home_url( '/' );
+		if (!empty($user_array['login_redirect'])) {
+			$login_redirect = $user_array['login_redirect'];
+		}
+
 		if(function_exists('fw_get_db_settings_option')) {
 			$captcha_settings = fw_get_db_settings_option('captcha_settings', $default_value = null);
 		}
-			
+
 		//recaptcha check
 		if( isset( $captcha_settings ) 
 			&& $captcha_settings === 'enable' 
@@ -2241,7 +2247,7 @@ if ( ! function_exists( 'kt_docdirect_ajax_login' ) ) {
 				} else {
 					session_start();
 					$_SESSION['login_user_id']	= $status->ID;
-					echo json_encode(array('type'=>'success','url'=> home_url( '/' ),'loggedin'=>true, 'message'=>esc_html__('Successfully Logged in.','docdirect_core')));				
+					echo json_encode(array('type'=>'success','url'=> $login_redirect,'loggedin'=>true, 'message'=>esc_html__('Successfully Logged in.','docdirect_core')));				
 				}
 			}
 		}
@@ -2873,6 +2879,38 @@ if ( ! function_exists( 'docdir_delete_user_banner_mobile' ) ) {
 	}
 	add_action('wp_ajax_docdir_delete_user_banner_mobile', 'docdir_delete_user_banner_mobile');
 	add_action('wp_ajax_nopriv_docdir_delete_user_banner_mobile', 'docdir_delete_user_banner_mobile');
+}
+
+if ( ! function_exists( 'docdir_delete_user_company_logo' ) ) {
+	function docdir_delete_user_company_logo() {
+		global $current_user, $wp_roles,$userdata,$post;
+		$user_identity	= $current_user->ID;
+		$json	=  array();
+		
+		/*-----------------------------Demo Restriction-----------------------------------*/
+		if( isset( $_SERVER["SERVER_NAME"] ) 
+			&& $_SERVER["SERVER_NAME"] === 'themographics.com' ){
+			$json['type']	   =  "error";
+			$json['message']	=  esc_html__("Sorry! you are restricted to perform this action on our demo.",'docdirect' );
+			echo json_encode( $json );
+			exit();
+		}
+		/*-----------------------------Demo Restriction END--------------------------------*/
+		
+		$update_avatar = update_user_meta($user_identity, 'userprofile_company_logo', '');
+		if($update_avatar){
+			$json['avatar'] = get_template_directory_uri().'/images/user270x270.jpg';
+			$json['type']		=  'success';	
+			$json['message']		= esc_html__('Company logo deleted.','docdirect');	
+		} else {
+			$json['type']		=  'error';	
+			$json['message']		= esc_html__('Some error occur, please try again later.','docdirect');	
+		}
+		echo json_encode($json);
+		exit;
+	}
+	add_action('wp_ajax_docdir_delete_user_company_logo', 'docdir_delete_user_company_logo');
+	add_action('wp_ajax_nopriv_docdir_delete_user_company_logo', 'docdir_delete_user_company_logo');
 }
 
 

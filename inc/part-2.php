@@ -34,6 +34,9 @@ if ( ! function_exists( 'kt_docdirect_account_settings' ) ) {
 		if( isset( $_POST['userprofile_banner_mobile'] ) && !empty( $_POST['userprofile_banner_mobile'] ) ){
 			update_user_meta( $user_identity, 'userprofile_banner_mobile', $_POST['userprofile_banner_mobile'] );
 		}
+		if( isset( $_POST['userprofile_company_logo'] ) && !empty( $_POST['userprofile_company_logo'] ) ){
+			update_user_meta( $user_identity, 'userprofile_company_logo', $_POST['userprofile_company_logo'] );
+		}
 		
 		//Update Basics
 		if( isset( $_POST['basics'] ) && !empty( $_POST['basics'] ) ){
@@ -962,3 +965,328 @@ if (!function_exists('docdirect_prepare_specialities')) {
 		return $speciality_array;
 	}
 }
+
+
+function kt_ajax_search_user_inactive() {
+	global $current_user, $wp_roles,$userdata,$post;
+
+	$exclude = array_unique(array_merge($ex1, $ex2));
+
+	$s = sanitize_text_field($_POST['search_string']);
+	$directory_type = $_POST['type_category'];
+
+	if($s != '') {
+		$meta_query_args = array();
+
+		$query_args	= array(
+					'role'  => 'temporary_profile',
+					);
+		$search_args	= array(
+							'search'         => '*'.esc_attr( $s ).'*',
+							'search_columns' => array(
+								'ID',
+								'display_name',
+								'user_login',
+								'user_nicename',
+								// 'user_email',
+								// 'user_url',
+							)
+						);
+
+		// $query_args	= array_merge( $query_args, $search_args );
+
+		$meta_by_name = array('relation' => 'OR',);
+		$meta_by_name[] = array(
+								'key' 	   => 'first_name',
+								'value' 	 => $s,
+								'compare'   => 'LIKE',
+							);
+		
+		$meta_by_name[] = array(
+								'key' 	   => 'last_name',
+								'value' 	 => $s,
+								'compare'   => 'LIKE',
+							);
+		
+		$meta_by_name[] = array(
+								'key' 	   => 'nickname',
+								'value' 	 => $s,
+								'compare'   => 'LIKE',
+							);
+		
+		$meta_by_name[] = array(
+						'key' 	   => 'username',
+						'value' 	 => $s,
+						'compare'   => 'LIKE',
+					);
+
+		if( !empty( $meta_by_name ) ) {
+			$meta_query_args[]	= array_merge( $meta_by_name,$meta_query_args );
+		}
+	    $meta_query_args[] = array(
+	                  'key'     => 'verify_user',
+	                  'value'   => 'on',
+	                  'compare' => '!='
+	                );
+
+		if( !empty( $meta_query_args ) ) {
+			$query_relation = array('relation' => 'AND',);
+			$meta_query_args	= array_merge( $query_relation,$meta_query_args );
+			$query_args['meta_query'] = $meta_query_args;
+		}
+
+		$user_query  = new WP_User_Query($query_args);
+		$output = '';
+		if ( ! empty( $user_query->results ) ) {
+			$output .= '<ul class="">';
+
+			foreach ( $user_query->results as $user ) {
+				$output .= '<li class="">';
+				$output .= '<div class="col-xs-8">';
+				$output .= '<h4>'.$user->first_name.' '.$user->last_name.'</h4>';
+				$output .= kt_get_tag_company($user->ID,$icon='',$echo=false);
+				$output .= '</div><div class="col-xs-4">';
+				$output .= '<a class="open_modal_active" data-user_id="'.$user->ID.'" href="javascript:;">'.pll__('Activate').'</a>';
+				$output .= '</div></li>';
+			}
+
+			$output .= '</ul>';
+		}else {
+
+			$output .= 'not found';
+
+		}
+	}
+
+	$json['data']	 = $output;
+	$json['type']	 = 'success';
+	$json['message']  = esc_html__('Success','docdirect');
+	echo json_encode($json);
+	die;
+}
+
+add_action('wp_ajax_search_user_inactive','kt_ajax_search_user_inactive');
+add_action( 'wp_ajax_nopriv_search_user_inactive', 'kt_ajax_search_user_inactive' );
+
+
+add_action('wp_footer', 'kt_modal_inactive');
+function kt_modal_inactive() {
+	?>
+	<?php 
+		global $current_user;
+		if(!is_user_logged_in()) {
+	?>
+	<div class="modal fade modal_inactive tg-request-only" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  	  <div class="modal-dialog tg-modal-content" role="document">
+  	  	<div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title"><?php pll_e( 'Activate' ) ?></h4>
+	    </div>
+		<form action="#" method="post" class="tg-form-modal activate-form">
+	      <fieldset class="booking-model-contents">
+	      	<div class="form-group">
+			    <label for="ac_email"><?php pll_e( 'Email' ) ?></label>
+			    <input type="text" name="email" class="form-control" id="ac_email" placeholder="<?php pll_e( 'email' ) ?>">
+			    <p><?php pll_e('Please enter your public company email to receive your profile activation code.');?></p>
+			</div>
+	      	<div class="form-group">
+	      		<input class="ac_user_id" type="hidden" name="user_id">
+		        <input type="submit" name="submit" class="tg-btn submit_activate" value="<?php pll_e('Submit');?>">
+        	</div>
+	      </fieldset>
+	    </form>
+	  </div>
+	</div>
+	<?php }
+}
+
+
+function kt_ajax_check_activate() {
+
+  	$user_id = isset( $_POST['user_id'] ) ? esc_sql( $_POST['user_id'] ) : '';
+  	$email = isset( $_POST['email'] ) ? $_POST['email'] : '';
+  	if ($email == '') {
+		$json['type']     = 'error';
+		$json['message']  = pll__('Email empty.');
+		echo json_encode($json);
+		die;
+  	}else if( !is_email( $email ) ) {
+		$json['type']     = 'error';
+		$json['message']  = pll__('Email not valid.');
+		echo json_encode($json);
+		die;
+  	}else{
+		$user = get_userdata($user_id);
+		$user_email = $user->user_email;
+		if( $user_email == $email ) {
+
+			$email_helper	= new DocDirectProcessEmail();
+			
+			$emailData	= array();
+			$emailData['user_identity']	=  $user_id;
+			$emailData['first_name']	   =  $_POST['first_name'];
+			$emailData['last_name']		=  $_POST['last_name'];
+			$emailData['password']	=  $random_password;
+			$emailData['username']	=  $username;
+			$emailData['email']	   =  $email;
+
+			$key_hash = md5(uniqid(openssl_random_pseudo_bytes(32)));
+			update_user_meta( $user_id, 'confirmation_key', $key_hash);
+
+			$page_activate = get_permalink( get_page_by_path( 'activate-account' ) );
+
+			$protocol = is_ssl() ? 'https' : 'http';
+
+			$verify_link = esc_url(add_query_arg(array(
+				'key' => $key_hash.'&verifyemail='.$email
+							), $page_activate));
+
+			$emailData['verify_link'] 	 = $verify_link;
+			$email_helper->process_email_verification($emailData);
+
+			$json['data']	 = $verify_link;
+			$json['type']	 = 'success';
+			$json['message']  = pll__('An email was sent. Please check your inbox','docdirect');
+			echo json_encode($json);
+			die;
+		}else {
+			$page_contact = get_permalink( get_page_by_path( 'activate-account-2' ) );
+			$json['redirect']     = $page_contact;
+			$json['type']     = 'error';
+			$json['message']  = pll__('Email not match. Please contact with admin');
+			echo json_encode($json);
+			die;
+		}
+	}
+
+}
+
+add_action('wp_ajax_check_activate','kt_ajax_check_activate');
+add_action( 'wp_ajax_nopriv_check_activate', 'kt_ajax_check_activate' );
+
+add_shortcode('form_activate', 'kt_form_activate');
+function kt_form_activate($atts) {
+	$atts = shortcode_atts( array(
+		
+	), $atts);
+	ob_start();
+	global $wpdb;
+	global $current_user, $wp_roles,$userdata,$post;
+	?>
+	<div class="">
+		<?php
+    	if ( !empty($_GET['key']) && !empty($_GET['verifyemail']) && !is_user_logged_in() ) {
+            $verify_key 	= esc_attr( $_GET['key'] );
+            $user_email 	= esc_attr( $_GET['verifyemail'] );
+
+            $user_identity = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->users WHERE user_email = %s", $user_email));
+			if( !empty( $user_identity ) ){
+				$confirmation_key = get_user_meta(intval( $user_identity ), 'confirmation_key', true);
+				if ( $confirmation_key === $verify_key ) {
+					?>
+					<div class="col-xs-6">
+						<h3><?php pll_e('You must change password to activate account');?></h3>
+						<form action="#" method="post" class="changepass-form">
+					      	<div class="form-group">
+							    <label for="pass1"><?php pll_e( 'New password' ) ?></label>
+							    <input type="password" name="pass1" class="form-control" id="pass1">
+							</div>
+					      	<div class="form-group">
+							    <label for="pass2"><?php pll_e( 'Retype password' ) ?></label>
+							    <input type="password" name="pass2" class="form-control" id="pass2">
+							</div>
+					      	<div class="form-group"">
+						        <input type="submit" name="submit" class="tg-btn submit_changepass" value="<?php pll_e('Submit');?>">
+				        	</div>
+					    </form>
+					    <div class="clearfix"></div>
+					    <?php
+					    if (isset($_POST['submit'])) {
+  							$pass1 = isset( $_POST['pass1'] ) ? esc_sql($_POST['pass1']) : '';
+  							$pass2 = isset( $_POST['pass2'] ) ? esc_sql($_POST['pass2']) : '';
+  							if ($pass1 != $pass2) {
+  								?>
+  								<div class="alert alert-danger"><?php pll_e('Error');?></div>
+  								<?php
+  							}else {
+  								wp_set_password( $pass1, $user_identity );
+								update_user_meta($user_identity, 'verify_user', 'on');
+								$u = new WP_User( $user_identity );
+								// Remove role
+								$u->remove_role( 'temporary_profile' );
+
+								// Add role
+								$u->add_role( 'professional' );
+  								?>
+  								<div class="alert alert-success"><?php pll_e('Success');?></div>
+  								<?php
+					            function kt_add_code_footer_activate() {
+									global $current_user;
+									$user_identity	= $current_user->ID;
+
+									$dir_profile_page = '';
+									if (function_exists('fw_get_db_settings_option')) {
+								        $dir_profile_page = fw_get_db_settings_option('dir_profile_page', $default_value = null);
+								    }
+									$profile_page = isset($dir_profile_page[0]) ? $dir_profile_page[0] : '';
+									
+									$login_redirect = DocDirect_Scripts::docdirect_profile_menu_link($profile_page, 'settings','',true);
+									var_dump($login_redirect);
+					            	?>
+					                <script type="text/javascript">
+					                	jQuery(document).ready(function($){
+					                		setTimeout(function(){location.href = '<?php echo $login_redirect;?>'} , 2000);
+											// jQuery('.tg-user-modal').modal('toggle');
+											// jQuery('input.login_redirect').val('');
+										});
+					                </script>
+					            <?php }
+					            add_action('wp_footer', 'kt_add_code_footer_activate', 100);
+  							}
+					    }
+					    ?>
+					</div>
+					<?php
+				}else {?>
+					error
+				<?php }
+			}
+		}?>
+	</div>
+	<?php
+	$output = ob_get_contents();
+	ob_end_clean();
+	return $output;
+}
+
+/**
+ * Add role
+ *
+ * @param json
+ * @return string
+ */
+if ( ! function_exists( 'kt_add_user_roles' ) ) {
+	function kt_add_user_roles() {
+		
+		$professional = add_role('temporary_profile', esc_html__('Temporary Profile','docdirect'));
+	}
+	add_action( 'admin_init', 'kt_add_user_roles' );
+}
+
+
+function docdirect_do_check_user_type($user_identity){
+	if( isset( $user_identity ) && !empty( $user_identity ) ) {
+		$data	= get_userdata( $user_identity );
+		if( isset( $data->roles[0] ) && !empty( $data->roles[0] ) && ( $data->roles[0] === 'temporary_profile' || $data->roles[0] === 'professional' || $data->roles[0] === 'administrator' ) ){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	return false;
+}
+add_filter( 'docdirect_do_check_user_type', 'docdirect_do_check_user_type', 10, 3 );
+
+
+

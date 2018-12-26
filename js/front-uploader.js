@@ -76,6 +76,27 @@ jQuery(document).ready(function($){
 		});
 	});
 
+	$(document).on( 'click', '#kt_upload-profile-company_logo', function(e) {
+		e.preventDefault();
+
+		var frameArgs = {
+			multiple: false,
+			title: 'Select Photo',
+		    library: {
+		            type: [ 'image' ]
+		    },
+		};
+
+		handle_images( frameArgs, function( selection ){
+			model = selection.first();
+			$('.userprofile_company_logo').val( model.id );
+			var img = model.attributes.url;
+			// var ext = img.substring(img.lastIndexOf('.'));
+			// img = img.replace( ext, '-270x270'+ext );
+			jQuery('.user-company_logo').find('img').attr( 'src', img );
+		});
+	});
+
 	$(document).on( 'click', '#kt_upload-profile-banner_mobile', function(e) {
 		e.preventDefault();
 

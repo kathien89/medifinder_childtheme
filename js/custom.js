@@ -59,6 +59,30 @@
 		});
 		return false;
 	});
+	//Delete company_logo
+	jQuery('.tg-docimg').on('click','.del-company_logo',function(e){
+		e.preventDefault();
+		var _this 	= jQuery(this);
+		var dataString = 'action=docdir_delete_user_company_logo';
+		jQuery('body').append(loder_html);
+		jQuery.ajax({
+			type: "POST",
+			url: scripts_vars.ajaxurl,
+			data: dataString,
+			dataType:"json",
+			success: function(response) {
+				jQuery('body').find('.docdirect-site-wrap').remove();
+				if( response.type == 'error' ) {
+					jQuery.sticky(response.message, {classList: 'important', speed: 200, autoclose: 5000});
+				} else{
+					_this.parents('.tg-docimg').find('.user-company_logo img').attr('src', response.avatar);
+					_this.parents('.tg-docimg').find('.del-company_logo').hide();
+					jQuery.sticky(response.message, {classList: 'success', speed: 200, autoclose: 5000});
+				}
+			}
+		});
+		return false;
+	});
 
 
     jQuery(document).on('change', '.start_time select', function (event) {
@@ -1008,6 +1032,92 @@
     		$(this).addClass('not_full');
     	}
     });
+
+    jQuery(document).on('submit', '.activate-form', function(e) {
+    	e.preventDefault();
+    	form_data = $(this).serialize();
+		$('body').append(loder_html);
+  		jQuery.ajax({
+            type: "POST",
+            url: scripts_vars.ajaxurl,
+            data: form_data + '&action=check_activate',
+        	dataType: "json",
+            success: function(response) {
+				jQuery('body').find('.docdirect-site-wrap').remove();
+				if (response.type == 'success') {
+					jQuery.sticky(response.message, {classList: 'success', speed: 200, autoclose: 3000,position: 'top-right',});
+					$('.modal_inactive').modal('hide');
+				}else {
+					jQuery.sticky(response.message, {classList: 'important', speed: 200, autoclose: 5000});
+					if (response.redirect != '') {
+						setTimeout(function(){location.href = response.redirect} , 3000);
+					}
+				}
+            }
+        });
+    });	;
+
+    $('body').on('click', '.open_modal_active', function() {
+    	var user_id = $(this).data('user_id');
+		$('.modal_inactive').modal('show');
+		$('.modal_inactive').find('input.ac_user_id').val(user_id);
+    });	;
+
+	$('.search_inactive .response').hide();
+	$('.search_inactive input.search').keyup(function() {
+	    delay(function(){
+	    	var search_string = $('.search_inactive input.search').val();
+	    	var responve_div = $('.search_inactive').find('.response');
+	    	string = 'search_string=' + search_string + '&type=home';
+	    	if ( $.trim(search_string) != '' ) {
+				$('body').append(loder_html);
+		    	jQuery.ajax({
+			        type: "POST",
+			        url: scripts_vars.ajaxurl,
+			        data: string + '&action=search_user_inactive',
+			    	dataType: "json",
+			        success: function(response) {
+						jQuery('body').find('.docdirect-site-wrap').remove();
+						responve_div.html(response.data);
+						responve_div.show();
+			        }
+			    });
+		    }
+	    }, 1000 );
+	});
+
+
+	$('.search_active').on('click', function() {
+    	var search_string = $(this).prev().val();
+    	var responve_div = $(this).closest('.search_inactive').find('.response');
+    	string = 'search_string=' + search_string + '&type=home';
+    	if ( $.trim(search_string) != '' ) {
+			$('body').append(loder_html);
+	    	jQuery.ajax({
+		        type: "POST",
+		        url: scripts_vars.ajaxurl,
+		        data: string + '&action=search_user_inactive',
+		    	dataType: "json",
+		        success: function(response) {
+					jQuery('body').find('.docdirect-site-wrap').remove();
+					responve_div.html(response.data);
+					$('.search_inactive .response').show();
+		        }
+		    });
+	    }
+    });
+    $(document).click(function(e) {
+	    var target = e.target;
+	    var closest = $('.search_inactive .response');
+	    if (!$(target).is(closest) && !$(target).parents().is(closest) &&
+	    	!$(target).is('.search_inactive input') && 
+	    	!$(target).is('.search_inactive .search_active')
+	    	) {
+	        $('.search_inactive .response').hide();
+	    }else {
+	        $('.search_inactive .response').show();
+	    }
+	});
 
     /*****************/
 

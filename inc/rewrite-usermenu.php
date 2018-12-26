@@ -522,6 +522,12 @@ if (!class_exists('kt_docdirect_headers')) {
                             'docdirect_get_user_avatar_filter',
                              docdirect_get_user_avatar(array('width'=>150,'height'=>150), $user_identity) //size width,height
                         );
+                        if(kt_is_company($user_identity)){
+                          $company_logo_id = get_user_meta($user_identity, 'userprofile_company_logo', true);
+                          if ( isset( $company_logo_id ) && !empty( $company_logo_id ) ) {
+                            $avatar = docdirect_get_image_source($company_logo_id,full,full);
+                          }
+                        }
                         
                         $first_name            = get_user_meta( $user_identity, 'first_name', true);
                         $last_name              = get_user_meta( $user_identity, 'last_name', true);

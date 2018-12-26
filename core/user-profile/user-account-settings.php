@@ -1031,6 +1031,8 @@ $today = time();
 
         <?php get_template_part('core/user-profile/user','affiliations');?>
 
+        <?php get_template_part('core/user-profile/user','practices');?>
+
         <div class="tg-bordertop tg-haslayout" style="min-height: 220px;">
             <div class="tg-formsection1">
                 <div class="parent-heading">

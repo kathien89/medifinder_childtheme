@@ -113,15 +113,16 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
                         }
                       
                         foreach ( $user_query->results as $user ) {
-
+                            $current_role = $user->roles[0];
+                          
                             $current_info = kt_get_current_active_info_doctor($user->ID);
-                      $u_latitude    = '';
-                      $u_longitude    = '';
-                      $business_email = '';
-                      $phone_number = '';
-                      $address = '';
-                      $fax = '';
-                      $mtr_exit = '';
+                            $u_latitude    = '';
+                            $u_longitude    = '';
+                            $business_email = '';
+                            $phone_number = '';
+                            $address = '';
+                            $fax = '';
+                            $mtr_exit = '';
 
                             if (!empty($current_info)) {
                               $basics = $current_info['basics'];
@@ -146,7 +147,6 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
                                 );
                                 
                             $privacy		= docdirect_get_privacy_settings($user->ID); //Privacy settin
-                            
                             if( !empty( $u_latitude ) && !empty( $u_longitude ) ) {
                                 $directories_array['latitude']   = $u_latitude;
                                 $directories_array['longitude'] = $u_longitude;
@@ -210,23 +210,39 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
                                 }else {
                                   $banner = get_stylesheet_directory_uri().'/images/doctor-banner-default.jpg';
                                 }
-    
+                                $userprofile_banner_id = get_user_meta($user->ID, 'userprofile_banner', true);
+                                $userprofile_banner = docdirect_get_image_source($userprofile_banner_id,full,full);
+                                if(kt_is_company($user->ID)){
+                                  $company_logo_id = get_user_meta($user->ID, 'userprofile_company_logo', true);
+                                  if ( isset( $company_logo_id ) && !empty( $company_logo_id ) ) {
+                                    $avatar = docdirect_get_image_source($company_logo_id,full,full);
+                                  }
+                                }
+
+                                $climg = '';
+                                $thumb_id = get_user_meta($user->ID, 'userprofile_media', true);
+                                if ($current_role == 'temporary_profile') {
+                                  include( locate_template( 'inc/content-temporary_profile.php' ) );
+                                }else {
                             ?>
                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 doc-verticalaligntop">
                               <div class="doc-featurelist" class="user-<?php echo intval( $user->ID );?>">
-                                    <figure class="doc-featureimg" style="background-image: url(<?php echo $banner;?>)"> 
+                                    <figure class="doc-featureimg <?php echo $climg;?>" style="background-image: url(<?php echo $banner;?>)">
                                         <?php if( isset( $featured_string ) && $featured_string > $current_string ){?>
                                             <?php //kt_docdirect_get_featured_tag(true, $user->ID, 'v2');?>
                                         <?php }?>
-                                        <a href="<?php echo get_author_posts_url($user->ID); ?>" class="list-avatar"><img src="<?php echo esc_attr( $avatar );?>" alt="<?php echo esc_attr( $directories_array['name'] );?>"></a>
+                                        <a href="<?php echo get_author_posts_url($user->ID); ?>" class="list-avatar">
+                                        <img src="<?php echo esc_attr( $avatar );?>" alt="<?php echo esc_attr( $directories_array['name'] );?>">
+                                        </a>
                                         <div class="clearfix"></div>
+                                        <?php //if(!kt_is_company($user->ID)){?>
                                         <?php docdirect_get_verified_tag(true,$user->ID,'','v2');?>
-                                        <h2><a href="<?php echo get_author_posts_url($user->ID); ?>" class="list-avatar1"><?php echo ( $get_username );?></a></h2>
+                                        <?php //}?>
+                                        <h2><a href="<?php echo get_author_posts_url($user->ID); ?>" class="list-avatar1"><?php echo $get_username;?></a></h2>
                                         <?php if( !empty( $user->tagline ) ) {?>
                                             <span><?php echo esc_attr( $user->tagline );?></span>
                                         <?php }?>
                                         <ul class="doc-matadata">
-                                          
                                           <li><?php docdirect_get_likes_button($user->ID);?></li>
                                            <li><?php docdirect_get_wishlist_button($user->ID,true,'v2');?></li>
                                           <?php
@@ -240,7 +256,7 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
                                           <!-- <figcaption></figcaption> -->
                                         </a>
                                     </figure>
-                                    <div class="doc-featurecontent">                                      
+                                    <div class="doc-featurecontent">
                                         <?php kt_get_tag_company($user->ID);?>
                                       <ul class="doc-addressinfo">
                                         <?php if( !empty( $directories_array['address'] ) ) {?>
@@ -332,6 +348,7 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
                                 </div>
                             </div>
                         <?php
+                            }
                           }
                         }
                      } else{?>

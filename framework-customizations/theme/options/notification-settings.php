@@ -381,6 +381,39 @@ $options = array(
 							)
 						),
 					),
+					'temporary_email' => array(
+						'title' => esc_html__('Temporary Email', 'docdirect'),
+						'type' => 'tab',
+						'options' => array(
+							'tm_subject' => array(
+								'type' => 'text',
+								'value' => 'Temporary Email',
+								'label' => esc_html__('Subject', 'docdirect'),
+								'desc' => esc_html__('Please add subject for temporary.', 'docdirect'),
+							),
+							'tm_info' => array(
+								'type' => 'html',
+								'value' => '',
+								'attr' => array(),
+								'label' => esc_html__('Email settings', 'docdirect'),
+								'desc' => esc_html__('', 'docdirect'),
+								'help' => esc_html__('', 'docdirect'),
+								'html' => '%email% — To display email. <br/>
+								%link% — To display the lost password link.<br/>
+								%logo% — To display site logo.<br/>',
+							),
+							'tm_content' => array(
+								'type' => 'wp-editor',
+								'value' => '',
+								'attr' => array(),
+								'label' => esc_html__('Temporary Email Content', 'docdirect'),
+								'desc' => esc_html__('', 'docdirect'),
+								'help' => esc_html__('', 'docdirect'),
+								'size' => 'large', // small, large
+								'editor_height' => 400,
+							)
+						),
+					),
 				)
 			),
 			'admin_settings' => array(

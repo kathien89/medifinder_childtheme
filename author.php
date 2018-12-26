@@ -2094,6 +2094,7 @@ if( !empty( $current_author_profile->user_profile_insurers ) ) {
                       </div>
                     </fieldset>
                   </form>
+                  <?php require_once('inc/form_review.php');?>
                 </div>
                 <?php }?>
               </div>

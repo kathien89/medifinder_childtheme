@@ -95,9 +95,9 @@ if( empty( $attached_specialities )){
 ?>
 <?php
     $user_premium = get_user_meta($user_identity , 'user_premium' , true);
-    if( !in_array('company', $list_terms) &&            
+    if( !in_array('company', $list_terms) &&
         !in_array('medical-centre', $list_terms) &&
-        !in_array('hospital-type', $list_terms) &&           
+        !in_array('hospital-type', $list_terms) &&
         !in_array('scans-testing', $list_terms)
     ) {
         $current_option = get_option( $user_premium, true );
@@ -109,7 +109,13 @@ if( empty( $attached_specialities )){
         <div class="tg-editprofile tg-haslayout">
             <div class="<?php echo esc_attr( $section_column );?> tg-findheatlhwidth">
                 <div class="row">
-                    <div class="tg-editimg">
+
+                  <?php
+                  $cl_company = '';
+                  if(kt_is_company($user_identity)){
+                    $cl_company = 'company';
+                  }?>
+                    <div class="tg-editimg <?php echo $cl_company;?>">
                     	<div class="tg-editimg-avatar">
                             <div class="tg-heading-border tg-small">
                                 <h3>
@@ -125,9 +131,9 @@ if( empty( $attached_specialities )){
                                 <span class="user-avatar"><img src="<?php echo esc_url( $avatar );?>" alt="<?php pll_e('Avatar');?>"  /></span>
                                 <?php if( isset( $is_avatar ) && !empty( $is_avatar ) ) {?>
                                     <a href="javascript:;" class="tg-deleteimg del-avatar"><i class="fa fa-plus"></i></a>
-                                <?php }?>                                
+                                <?php }?>
                                 <div id="plupload-container">
-                                    <a href="javascript:;" id="kt_upload-profile-avatar" class="tg-uploadimg upload-avatar"><?php pll_e('Upload Image');?><i class="fa fa-upload"></i></a> 
+                                    <a href="javascript:;" id="kt_upload-profile-avatar" class="tg-uploadimg upload-avatar"><?php pll_e('Upload Image');?><i class="fa fa-upload"></i></a>
                                 </div>
                             </figure>
                             <div class="tg-uploadtips">
@@ -146,8 +152,8 @@ if( empty( $attached_specialities )){
                             <div class="tg-heading-border tg-small">
                                 <h3><?php pll_e('Mobile Banner');?></h3>
                             </div>
-                            <figure class="tg-docimg"> 
-                                <?php 
+                            <figure class="tg-docimg">
+                                <?php
                                     $banner_id = get_user_meta($user_identity, 'userprofile_banner_mobile', true);
                                     if ( isset( $banner_id ) && !empty( $banner_id ) ) {
                                         $banner_url = docdirect_get_image_source($banner_id,270,270);
@@ -174,13 +180,47 @@ if( empty( $attached_specialities )){
                             </div>
                             <div id="errors-log"></div>
                         </div>
+                        <?php if(kt_is_company($user_identity)){?>
+                        <div class="tg-editimg-banner">
+                            <div class="tg-heading-border tg-small">
+                                <h3><?php pll_e('Company Logo');?></h3>
+                            </div>
+                            <figure class="tg-docimg">
+                                <?php
+                                    $banner_id = get_user_meta($user_identity, 'userprofile_company_logo', true);
+                                    if ( isset( $banner_id ) && !empty( $banner_id ) ) {
+                                        $banner_url = docdirect_get_image_source($banner_id,270,270);
+                                    }else {
+                                        $banner_url = get_template_directory_uri().'/images/user270x270.jpg';
+                                    }
+                                ?>
+                                <input class="userprofile_company_logo" type="hidden" name="userprofile_company_logo" value="<?php echo $banner_id;?>">
+                                <span class="user-company_logo"><img src="<?php echo esc_url( $banner_url );?>" alt="<?php pll_e('Avatar');?>"  /></span>
+                                <?php if( isset( $banner_id ) && !empty( $banner_id ) ) {?>
+                                    <a href="javascript:;" class="tg-deleteimg del-company_logo"><i class="fa fa-plus"></i></a>
+                                <?php }?>
+                                <div id="plupload-container-banner">
+                                    <a href="javascript:;" id="kt_upload-profile-company_logo" class="tg-uploadimg upload-banner"><?php pll_e('Upload Image');?><i class="fa fa-upload"></i></a>
+                                </div>
+                            </figure>
+                            <div class="tg-uploadtips">
+                                <h4><?php pll_e('tips for uploading');?></h4>
+                                <ul class="tg-instructions">
+                                    <li><?php pll_e('Max Upload Size: ');?><?php docdirect_format_size_units($dir_datasize,'print');?></li>
+                                    <li><?php pll_e('Dimensions: 370x200');?></li>
+                                    <li><?php pll_e('Extensions: JPG,JPEG,PNG,GIF');?></li>
+                                </ul>
+                            </div>
+                            <div id="errors-log"></div>
+                        </div>
+                        <?php }?>
                         <div class="row">
                         	<div class="col-xs-12 desktop_banner">
                                 <div class="tg-heading-border tg-small">
                                     <h3><?php pll_e('Desktop Banner');?></h3>
                                 </div>
-                                <figure class="tg-docimg"> 
-                                    <?php 
+                                <figure class="tg-docimg">
+                                    <?php
                                         $banner_id = get_user_meta($user_identity, 'userprofile_banner', true);
                                         if ( isset( $banner_id ) && !empty( $banner_id ) ) {
                                             $banner_url = docdirect_get_image_source($banner_id,0,0);
@@ -213,7 +253,7 @@ if( empty( $attached_specialities )){
                 </div>
             </div>
         </div>
-        
+
 		<?php if( apply_filters('docdirect_do_check_user_type',$user_identity ) === true ){?>
             <div class="tg-editprofile tg-haslayout">
                 <div class="col-md-12 col-sm-12 col-xs-12 tg-expectwidth">

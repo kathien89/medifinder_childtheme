@@ -76,6 +76,7 @@ docdirect_enque_map_library();//init Map
                                             <div id="recaptcha_signin"></div>
                                         </div>
                                     <?php }?>
+                                    <input type="hidden" name="login_redirect" class="login_redirect">
                                     <button class="tg-btn tg-btn-lg do-login-button"><?php pll_e('LOGIN now','docdirect_core');?></button>
                                 </fieldset>
                             </form>
@@ -110,8 +111,19 @@ docdirect_enque_map_library();//init Map
 							<div class="form-group social_login">
 								<?php echo do_shortcode('[apsl-login-lite]');?>
 							</div>
-							<div class="form-group user-types"> 
-								<?php 
+							<div class="form-group user-types search_inactive">
+								<p><?php pll_e('Search MediFinder & activate your name or company:');?></p>
+								<div class="form-group">
+									<input class="search" type="text" name="search" value="" placeholder="<?php pll_e('Search Name/Company & Activate');?>" />
+							    	<a class="search_active" href="javascript:;"><i class="fa fa-search"></i></a>
+							    </div>
+					    		<div class="response"></div>
+							</div>
+							<div class="form-group user-types text-center">
+								<p><?php pll_e('Or Sign up a New Account');?></p>
+							</div>
+							<div class="form-group user-types">
+								<?php
 								$member_group_terms = get_terms( array(
 								    'taxonomy' => 'group_label',
 								    // 'orderby' => 'ID',

@@ -126,6 +126,12 @@ $flag	= rand(1,9999);
                              docdirect_get_user_avatar(array('width'=>150,'height'=>150), $user->ID),
                              array('width'=>150,'height'=>150) //size width,height
                         );
+                    if(kt_is_company($user->ID)){
+                      $company_logo_id = get_user_meta($user->ID, 'userprofile_company_logo', true);
+                      if ( isset( $company_logo_id ) && !empty( $company_logo_id ) ) {
+                        $avatar = docdirect_get_image_source($company_logo_id,full,full);
+                      }
+                    }
                     $business_email = get_user_meta( $user->ID, 'business_email', true);
                         
                     $privacy		= docdirect_get_privacy_settings($user->ID); //Privacy settin

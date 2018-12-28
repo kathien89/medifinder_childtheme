@@ -554,13 +554,13 @@ if ( ! function_exists( 'kt_docdirect_make_review' ) ) {
             $dir_review_status = fw_get_db_settings_option('dir_review_status', $default_value = null);
         }
 
-		$number_review_3months = kt_count_reviews_3months($current_user->ID ,$_POST['user_to']);
+		/*$number_review_3months = kt_count_reviews_3months($current_user->ID ,$_POST['user_to']);
 		if ($number_review_3months > 1) {
 			$json['type']		= 'error';
 			$json['message']	 = pll__('Max 2 reviews in 90 days .');	
 			echo json_encode($json);
 			die;
-		}
+		}*/
 		
         if(isset($_POST['guest_name'])) {
 			if( $_POST['guest_name'] == '' 
@@ -580,36 +580,6 @@ if ( ! function_exists( 'kt_docdirect_make_review' ) ) {
 			}
 		}
 
-		/*if( apply_filters('docdirect_is_user_logged_in','check_user') === false ){
-			$json['type']	= 'error';
-			$json['message']	= pll__('Please login first to add review.');	
-			echo json_encode($json);
-			die;
-		}*/
-
-		/*if( is_user_logged_in() ){
-			$user_reviews = array(
-				'posts_per_page'	=> "-1",
-				'post_type'		 => 'docdirectreviews',
-				'post_status'	   => 'any',
-				'author' 			=> $current_user->ID,
-				'meta_key'		  => 'user_to',
-				'meta_value'		=> $user_to,
-				'meta_compare'	  => "=",
-				'orderby'		   => 'meta_value',
-				'order'			 => 'ASC',
-			);
-
-			$count = kt_count_appointments($current_user->ID, $user_to);
-			if ( $count < 1 ) {
-				$json['type']		= 'error';
-				$json['type2']		= 'modal';
-				$json['type3']		= $count;
-				$json['message']	= pll__('Please make another appointment to make new review.', 'docdirect');
-				echo json_encode($json);
-				die();
-			}
-		}*/
 		$user_rating1	   = $_POST['user_rating'];	
 		$detail_rating	   = $_POST['detail_rating'];
 		$final_detail = array();
@@ -627,23 +597,7 @@ if ( ! function_exists( 'kt_docdirect_make_review' ) ) {
 		}*/
 		
         if(isset($_POST['review_code']) && $_POST['review_code'] != '') {
-
-			/*$list_invite = get_user_meta( $user_to, 'invite_review', true );
-			$list_invite = json_decode($list_invite, true);
-			$key_list = kt_search_array($list_invite, 'review_code', $_POST['review_code']);
-			// var_dump($key_list); 
-			if ($key_list === null) {
-				$json['type']	= 'error';
-				$json['message']	= pll__('Review Code not exists.');	
-				echo json_encode($json);
-				die;
-			}else if ( $list_invite[$key_list]['status'] != 'pending' ) {
-				$json['type']	= 'error';
-				$json['message']	= pll__('Review Code was used.');	
-				echo json_encode($json);
-				die;
-			}*/
-			$val_object = kt_check_review_code_by_user( $_POST['review_code'], $user_to );
+			/*$val_object = kt_check_review_code_by_user( $_POST['review_code'], $user_to );
 			if ($val_object == false) {
 				$json['type']	= 'error';
 				$json['message']	= pll__('Review Code not exists.');	
@@ -651,15 +605,22 @@ if ( ! function_exists( 'kt_docdirect_make_review' ) ) {
 				die;
 			}else {
 				$invite_review_id = $val_object->ID;
-			}
+			}*/
         }
+        
+		if(count($_POST['user_rating']) < 6 ) {
+			$json['type']		= 'error';
+			$json['message']	 = pll__('Please fill all rating');	
+			echo json_encode($json);
+			die;
+		}
         
 		$db_directory_type	 = get_user_meta( $user_to, 'directory_type', true);
 			
 		if( $_POST['user_subject'] != '' 
 			&& $_POST['user_description'] != '' 
 			&& $_POST['user_to'] != ''
-			&& $_POST['review_code'] != ''
+			// && $_POST['review_code'] != ''
 		) {
 		
 			$user_subject	  = sanitize_text_field( $_POST['user_subject'] );
@@ -697,9 +658,7 @@ if ( ! function_exists( 'kt_docdirect_make_review' ) ) {
 				$review_meta['guest_email'] = $_POST['guest_email'];
 				$review_meta['review_code'] = $_POST['review_code'];
 			}
-			// $list_invite[$key_list]['status'] = 'complete';
-			// $new_invite = json_encode($list_invite);
-			// update_user_meta( $user_to, 'invite_review', $new_invite );
+
 			update_post_meta( $invite_review_id, 'status', 'completed' );
 
 			//Update post meta
@@ -740,13 +699,7 @@ if ( ! function_exists( 'kt_docdirect_make_review' ) ) {
 					$emailData['username_to']	   = $user_to_data->first_name.' '.$user_to_data->last_name;
 				}
 				
-				//User from data
-				/*if( !empty( $user_from_data->display_name ) ) {
-					$emailData['username_from']	   = $user_from_data->display_name;
-				} elseif( !empty( $user_from_data->first_name ) || $user_from_data->last_name ) {
-					$emailData['username_from']	   = $user_from_data->first_name.' '.$user_from_data->last_name;
-				}*/
-					$emailData['username_from']	   = $user_from_data->first_name.' '.$user_from_data->last_name;
+				$emailData['username_from']	   = $user_from_data->first_name.' '.$user_from_data->last_name;
 
 				$emailData['link_from']	= get_author_posts_url($user_from_data->ID);
 				
@@ -756,7 +709,7 @@ if ( ! function_exists( 'kt_docdirect_make_review' ) ) {
                 $sum = array_sum($rating_decode);
                 $trungbinh	= $sum/5;
 
-				$emailData['detail_rating']	        = $final_detail;
+				// $emailData['detail_rating']	        = $final_detail;
 				$emailData['rating']	        = $trungbinh;
 				$emailData['reason']	        = $user_subject;
 				$emailData['comment_content']	        = $user_description;

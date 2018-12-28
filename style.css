@@ -5017,14 +5017,213 @@ html .doc-navigationarea.fixed .doc-admin {
     width: 27%;
 }
 
+/*******27 Dec 2018**********/
+.tg-statistics {
+    margin-bottom: 20px;
+}
+.kt_blocks li {
+    list-style: none;
+    display: inline-block;
+    border: 1px solid #ddd;
+    vertical-align: middle;
+    height: 90px;
+    min-width: 180px;
+    padding: 15px;
+    border-radius: 5px;
+    margin-right: 20px;
+    font-size: 16px;
+}
+.kt_blocks li img {
+    display: inline-block;
+    margin-right: 10px;
+}
+.kt_blocks li p {
+    vertical-align: middle;
+    height: 100%;
+    display: inline-block;
+    margin: 0;
+}
+.kt_blocks li span {
+    color: #88bd15;
+    font-weight: 700;
+}
 
+.kt_score > div {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 20px 0 0;
+    padding: 15px;
+    overflow: hidden;
+}
+.kt_score > div figure {
+    padding: 0;
+    margin: 0 5px 0 0;
+    float: left;
+}
+.kt_score > div div {
+    float: left;
+}
+.kt_score > div h5 {
+    padding: 0;
+    font-weight: 700;
+    margin: 0;
+    font-size: 14px;
+    color: #8a8a8a;
+}
+.kt_score > div span {
+    color: #88bd15;
+    font-weight: 700;
+    font-size: 16px;
+}
+.kt_score > div li {
+    list-style: none;
+    display: inline-block;
+    margin-right: 10px;
+    text-align: center;
+}
+.kt_score > div li small {
+    clear: both;
+    width: 100%;
+    font-size: 14px;
+    display: block;
+    text-align: center;
+}
+.drinkcard-cc{
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:22px;height:22px;
+}
+.new_review input[type="radio"] {
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+.bad {background-image: url('images/review/bad.png')}
+.ok {background-image: url('images/review/ok.png')}
+.good {background-image: url('images/review/good.png')}
+.great {background-image: url('images/review/great.png')}
+.new_review input[type="radio"]:checked +.bad, .bad:hover {
+    background-image: url('images/review/bad_active.png')
+}
+.new_review input[type="radio"]:checked +.ok, .ok:hover {
+    background-image: url('images/review/ok_active.png')
+}
+.new_review input[type="radio"]:checked +.good, .good:hover {
+    background-image: url('images/review/good_active.png')
+}
+.new_review input[type="radio"]:checked +.great, .great:hover {
+    background-image: url('images/review/great_active.png')
+}
 
+.cc-selector-2 input[type="radio"] {
+    position:absolute;
+    z-index:999;
+}
+.star_detail .icon_emoji.active {
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+.star_detail .icon_emoji {
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:22px;height:22px;
+    -webkit-filter: brightness(1) grayscale(1) opacity(.9);
+       -moz-filter: brightness(1) grayscale(1) opacity(.9);
+            filter: brightness(1) grayscale(1) opacity(.9);
+}
+.star_detail span i {
+    position: absolute;
+    right: -8px;
+    top: -5px;
+    color: #fff;
+    background-color: #35bea8;
+    padding: 3px 3px 3px 4px;
+    border-radius: 50%;
+    font-size: 9px;
+    width: 15px;
+}
+.star_detail span.num_point {
+    display: inline-block;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 26px;
+    position: relative;
+    height: 26px;
+    text-align: center;
+    font-size: 14px;
+    vertical-align: top;
+    line-height: 22px;
+    padding-left: 1px;
+}
+.star_detail div > img {
+    display: inline-block;
+}
+.star_detail div > .content {
+    display: inline-block;
+    vertical-align: top;
+}
+.star_detail .content h5 {
+    margin: 0 0 10px;
+    font-size: 16px;
+}
+.star_detail .content span {
+    margin: 0 7px 0 0;
+}
+.tg-reviewheadright p {
+    background: url('images/review/upper_point.png') no-repeat left top;
+    padding-left: 46px;
+    margin: 0;
+    font-size: 12px;
+    line-height: 14px;
+    min-height: 34px;
+}
+.tg-reviewheadright p span {
+    color: #88bd15;
+    font-weight: 700;
+}
 
+.rating_type {
+    margin-bottom: 10px;
+}
+.rating_type label {
+    margin-bottom: 0;
+}
+.rating_type img {
+    margin-bottom: 20px;
+}
+.rating_type img {
+    display: inline-block;
+}
+.rating_type .content {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 40px);
+    padding-left: 10px;
+}
+.rating_type .content span {
+    margin: 0 7px 0 0;
+}
 
-
-
-
-
+.tg-modal-review .tg-modal-content {
+    border-radius: 3px;
+    margin: 0 0 0 -240px;
+    top: 10px;
+    width: 480px;
+    background-color: #fff;
+    border-radius: 3px;
+    overflow: hidden;
+    padding: 15px 0 15px;
+}
+.tg-modal-review .tg-modal-content > button {
+    position: absolute;
+    right: 5px;
+    top: 2px;
+}
 
 
 

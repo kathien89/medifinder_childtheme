@@ -100,6 +100,69 @@ if( $user_roles[0] == 'professional' && ( $user_featured == '' && $user_featured
 }?>
 <div class="tg-graph tg-haslayout">
     <?php if( $user_roles[0] == 'professional' ){?>
+    <div class="tg-statistics">
+		<div class="tg-heading-border tg-small">
+			<h3><?php pll_e('Statistics');?></h3>
+		</div>
+	    <?php		
+	   		$review_data    = kt_docdirect_get_everage_rating ( $url_identity );
+	   		$list_data = $review_data['list_data'];
+	   		/*echo '<pre>';
+	   		var_dump($review_data['list_data']);
+	   		echo '</pre>';*/
+			$wishlist    = get_user_meta($url_identity,'wishlist', true);
+			$total_bookings = kt_get_total_booking($url_identity);
+	    ?>
+	    <ul class="kt_blocks">
+	    	<li>
+    			<img src="<?php echo get_stylesheet_directory_uri();?>/images/review/overall_score.jpg">
+	    		<p><span><?php echo $review_data['total_points'];?></span><br> Overall scrore</p>
+	    	</li>
+	    	<li>
+    			<img src="<?php echo get_stylesheet_directory_uri();?>/images/review/total_likes.jpg">
+	    		<p><span><?php echo count($wishlist);?></span><br> Total likes</p>
+	    	</li>
+	    	<li>
+    			<img src="<?php echo get_stylesheet_directory_uri();?>/images/review/total_views.jpg">
+	    		<p><span><?php echo intval( docdirect_get_user_views( $url_identity ) );?></span><br> Total views</p>
+	    	</li>
+	    	<li>
+    			<img src="<?php echo get_stylesheet_directory_uri();?>/images/review/total_bookings.png">
+	    		<p><span><?php echo $total_bookings;?></span><br> Bookings</p>
+	    	</li>
+	    </ul>
+	    <?php
+			global $array_review;
+			global $array_emoji;
+		?>
+		<div class="row">
+			<?php 
+			foreach ($array_review as $key => $rv) {
+				$rv_data = $list_data[$rv['name']];
+				/*echo '<pre>';
+				var_dump($rv_data);
+				echo '</pre>';*/
+			?>
+		    <div class="kt_score col-sm-6 col-lg-4">
+		    	<div>
+			    	<figure><img src="<?php echo get_stylesheet_directory_uri();?>/images/review/<?php echo $rv['img'];?>.png"></figure>
+			    	<div class="">
+				    	<h5><?php echo $rv['title'];?></h5>
+				    	<span><?php echo $rv_data['total'];?> Pts</span>
+				    	<ul>
+				    	<?php foreach ($array_emoji as $point => $name) {?>
+					    	<li>
+					    		<img src="<?php echo get_stylesheet_directory_uri();?>/images/review/<?php echo $name;?>_active.png">
+					    		<small><?php echo isset($rv_data['details'][$point])?$rv_data['details'][$point]: '0';?></small>
+					    	</li>
+				    	<?php }?>
+				    	</ul>
+				    </div>
+			    </div>
+			</div>
+			<?php }?>
+		</div>
+	</div>
 	<div class="tg-profilehits">
 		<div class="tg-heading-border tg-small">
 			<h3><?php pll_e('Profile Hits');?></h3>
@@ -231,8 +294,8 @@ if( $user_roles[0] == 'professional' && ( $user_featured == '' && $user_featured
                               <div class="tg-reviewheadleft">
                                 <h3><a href="<?php echo $link; ?>"><?php echo $name;?></a></h3>
                                 <span><?php echo human_time_diff( strtotime( $review_date ), current_time('timestamp') ) . ' ago'; ?></span> </div>
-                              <div class="tg-reviewheadright tg-stars star-rating">
-                                <span style="width:<?php echo esc_attr( $percentage );?>%"></span>
+                              <div class="tg-reviewheadright">
+                                <p><span><?php printf( pll__( '+ %s Points', 'text_domain' ), $sum );?></span><br><?php pll_e('Review Score');?></p>
                               </div>
                             </div>
                             <div class="tg-description">
@@ -298,19 +361,15 @@ if( $user_roles[0] == 'professional' && ( $user_featured == '' && $user_featured
                                         <div class="tg-reviewhead">
                                           <div class="tg-reviewheadleft">
                                             <h3><a href="<?php echo get_author_posts_url(get_the_author_meta('ID')); ?>"><?php echo esc_attr( $user_name );?></a>
-                                                                         
-                                                <?php
-                                                    if ($current_user->ID == $_GET['identity']) {
-                                                        ?>
+                                                <?php if ($current_user->ID == $_GET['identity']) {?>
                                                             <a class="tg-btn remove_reply_button" href="javascript:;"><i class="fa fa-times"></i></a>
-                                                        <?php
-                                                    }
-                                                ?>
+                                                <?php }?>
                                             </h3>
-                                            <span><?php echo human_time_diff( get_the_time('U'), current_time('timestamp') ) . ' ago'; ?></span> </div>
+                                            <span><?php echo human_time_diff( get_the_time('U'), current_time('timestamp') ) . ' ago'; ?></span>
+                                          </div>
                                         </div>
                                         <div class="tg-description">
-                                          <p><?php the_content();?></p>
+                                         	<p><?php the_content();?></p>
                                         </div>
                                       </div>
                                     </div>
@@ -322,76 +381,23 @@ if( $user_roles[0] == 'professional' && ( $user_featured == '' && $user_featured
                         	?>
                         </div>
                         <div class="row star_detail">
-                        	<div class="col-sm-4">
-	                            <label>Recommendation</label>
-	                            <div class="tg-stars">
-	                            	<div class="tg-reviewheadleft tg-stars star-rating">
-		                                <span style="width:<?php echo esc_attr( $user_rating1['recommendation']*20 );?>%"></span>
-		                             </div>
-	                            	<span class="your-rate"><strong></strong></span>
-	                            	<script type="text/javascript">
-                                		jQuery(function () {
-                                            jQuery('#rv-<?php echo $post->ID;?> .your-rate strong').html(rating_vars.recommendation.rating_<?php echo $user_rating1['recommendation'];?>);
-                                		});
-	                            	</script>
-	                        	</div>
-                        	</div>
-                        	<div class="col-sm-4">
-                            	<label>Waiting Time</label>
-                            	<div class="tg-stars">
-	                            	<div class="tg-reviewheadleft tg-stars star-rating">
-		                                <span style="width:<?php echo esc_attr( $user_rating1['waiting_time']*20 );?>%"></span>
-		                             </div>
-                            		<span class="your-rate3"><strong></strong></span>
-	                            	<script type="text/javascript">
-                                		jQuery(function () {
-                                            jQuery('#rv-<?php echo $post->ID;?> .your-rate3 strong').html(rating_vars.waiting_time.rating_<?php echo $user_rating1['waiting_time'];?>);
-                                		});
-	                            	</script>
-	                            </div>
-                        	</div>
-                        	<div class="col-sm-4">
-	                            <label>Facilities</label>
-	                            <div class="tg-stars">
-	                            	<div class="tg-reviewheadleft tg-stars star-rating">
-		                                <span style="width:<?php echo esc_attr( $user_rating1['facilities']*20 );?>%"></span>
-		                             </div>
-	                            	<span class="your-rate5"><strong></strong></span>
-	                            	<script type="text/javascript">
-                                		jQuery(function () {
-                                            jQuery('#rv-<?php echo $post->ID;?> .your-rate5 strong').html(rating_vars.facilities.rating_<?php echo $user_rating1['facilities'];?>);
-                                		});
-	                            	</script>
-	                            </div>
-                        	</div>
-                        	<div class="col-sm-4">
-                            	<label>Bedside Manner</label>
-                            	<div class="tg-stars">
-	                            	<div class="tg-reviewheadleft tg-stars star-rating">
-		                                <span style="width:<?php echo esc_attr( $user_rating1['bedside_manner']*20 );?>%"></span>
-		                             </div>
-                            		<span class="your-rate2"><strong></strong></span>
-	                            	<script type="text/javascript">
-                                		jQuery(function () {
-                                            jQuery('#rv-<?php echo $post->ID;?> .your-rate2 strong').html(rating_vars.bedside_manner.rating_<?php echo $user_rating1['bedside_manner'];?>);
-                                		});
-	                            	</script>
-                            	</div>
-                        	</div>
-                        	<div class="col-sm-4">
-                            	<label>Supporting Staff</label>
-                            	<div class="tg-stars">
-	                            	<div class="tg-reviewheadleft tg-stars star-rating">
-		                                <span style="width:<?php echo esc_attr( $user_rating1['supporting_staff']*20 );?>%"></span>
-		                             </div>
-                            		<span class="your-rate4"><strong></strong></span>
-	                            	<script type="text/javascript">
-                                		jQuery(function () {
-                                            jQuery('#rv-<?php echo $post->ID;?> .your-rate4 strong').html(rating_vars.supporting_staff.rating_<?php echo $user_rating1['supporting_staff'];?>);
-                                		});
-	                            	</script>
-                            	</div>
-                        	</div>
+							<?php foreach ($array_review as $key => $rv) {
+								$num_point = $user_rating1[$key]
+							?>
+						    <div class="col-sm-6 col-lg-4">
+						    	<img src="<?php echo get_stylesheet_directory_uri();?>/images/review/<?php echo $rv['img'];?>.png">
+						    	<div class="content">
+							    	<h5><?php echo $rv['title'];?></h5>
+							    	<div class="clearfix"></div>
+							    	<?php foreach ($array_emoji as $point => $name) {
+							    		$active = ($num_point == $point) ? 'active' : '' ;
+							    	?>
+								    	<span class="icon_emoji <?php echo $name.' '. $active;?>" for="<?php echo $name.'-'.$key;?>"></span>
+							    	<?php }?>
+							    	<span class="num_point"><?php echo $num_point;?><i class="fa fa-plus"></i></span>
+							    </div>
+						    </div>
+							<?php }?>
                         </div>
                     </li>
                      	<?php

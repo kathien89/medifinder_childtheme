@@ -218,3 +218,47 @@ require_once ( STYLESHEETPATH. '/inc/part-calendar.php');
 
 require_once ( STYLESHEETPATH. '/inc/part-cronjobs.php');
 
+function kt_set_global_var() {
+    global $array_review;
+    global $array_emoji;
+		$array_review = [
+			'recommendation' => [
+				'img' => 'reccomend',
+				'title' => pll__('Recomend to others?'),
+				'small' => pll__('Would you recomend to another patient?'),
+				'name' => 'recommendation'
+			],
+			'supporting_staff' => [
+				'img' => 'support',
+				'title' => pll__('Supporting Staff'),
+				'small' => pll__('Rate the supporting staff of your provider'),
+				'name' => 'supporting_staff'
+			],
+			'waiting_time' => [
+				'img' => 'waiting_time',
+				'title' => pll__('Waiting time'),
+				'small' => pll__('How long was your appointment waiting time'),
+				'name' => 'waiting_time'
+			],
+			'bedside_manner' => [
+				'img' => 'bedside_manner',
+				'title' => pll__('Bedside Manner'),
+				'small' => pll__('Would you recomend to another patient?'),
+				'name' => 'bedside_manner'
+			],
+			'facilities' => [
+				'img' => 'facilities',
+				'title' => pll__('Facilities'),
+				'small' => pll__('Would you recomend to another patient?'),
+				'name' => 'facilities'
+			],
+			'accessibility' => [
+				'img' => 'accessibility',
+				'title' => pll__('Accessibility'),
+				'small' => pll__('Would you recomend to another patient?'),
+				'name' => 'accessibility'
+			],
+		];
+		$array_emoji = ['bad', 'ok', 'good', 'great'];
+}
+add_action( 'init', 'kt_set_global_var', 5 );

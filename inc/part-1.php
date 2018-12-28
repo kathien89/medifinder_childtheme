@@ -328,6 +328,50 @@ function kt_get_number_booking($user_id) {
 	return $query->post_count;
 }
 
+function kt_get_total_booking($user_id) {
+
+	$meta_query_args[] = array(
+								'key'     => 'bk_user_to',
+								'value'   => $user_id,
+								'compare'   => '=',
+								'type'	  => 'NUMERIC'
+							);
+											
+	        
+	$args 		= array( 'posts_per_page' => -1, 
+						 'post_type' => 'docappointments', 
+						 'post_status' => 'publish', 
+						 'ignore_sticky_posts' => 1,
+						);
+							
+	if( !empty( $meta_query_args ) ) {
+		$query_relation = array('relation' => 'AND',);
+		$meta_query_args	= array_merge( $query_relation,$meta_query_args );
+		$args['meta_query'] = $meta_query_args;
+	}
+
+	$query 		= new WP_Query( $args );
+	$count_post = $query->post_count;   
+	$args 		= array( 'posts_per_page' => -1, 
+						 'post_type' => 'docappointments', 
+						 'post_status' => 'publish', 
+						 'ignore_sticky_posts' => 1,
+						 'order'	=> 'DESC',
+						 'orderby'	=> 'ID',
+						 'lang' => 'en'
+						);
+
+
+	if( !empty( $meta_query_args ) ) {
+		$query_relation = array('relation' => 'AND',);
+		$meta_query_args	= array_merge( $query_relation,$meta_query_args );
+		$args['meta_query'] = $meta_query_args;
+	}
+	$query 		= new WP_Query($args);
+
+	return $query->post_count;
+}
+
 function kt_button_premium_menu( $pagename='' ) {
 
 	global $current_user, $wp_roles,$userdata,$post;
